@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>murApplis_tests.rb</title>
+  <link rel="stylesheet" href="docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>murApplis_tests.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        <p>This script tests the behavior of the shuffling function used by <code>murApplis</code>.</p>
+
+<p>It is also a first attempt at litterate-style programming: this page is generated from
+the <code>murApplis_tests.rb</code> file using <a href="https://github.com/rtomayko/rocco">Rocco</a>. You can
+also view <a href="./murApplis_tests.rb">murApplis_tests.rb</a> directly.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Requirements'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Requirements">&#182;</a>
+        </div>
+        <h2>Requirements</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>We recall that the required behavior of this custom shuffling function is to
+randomize an array of values such as <strong>no item is at the same place before and
+after the shuffle</strong>.</p>
+
+<p>On top of that, we&rsquo;d like to ensure the usual properties that we expect of a shuffling
+function: it should operate in <em>constant timing</em> (that is always the same duration for
+sets of the same length) and the resulting distribution should be <em>unbiased</em> (although
+this is more for algorithmic correctness: we probably don&rsquo;t really care if a wall of
+app icons is slightly biased).</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Shuffling'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Shuffling">&#182;</a>
+        </div>
+        <h2>Shuffling</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>Here is our shuffling function. It takes an array of items, and randomize them in a way
+that ensures no item occupies the same position before and after the shuffle. The array
+is modified in-place (for efficiency reasons), but the resulting array is also returned
+for chaining method calls.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">def</span> <span class="nf">shuffle!</span> <span class="n">array</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>The shuffle is made in <em>n &ndash; 1</em> iterations, where <em>n</em> is the number of items in the array.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">downto</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>For each iteration, we look at the <em>i</em> first items of the array.
+That means the first iteration will look at all the items in the array, the second
+at all the items but the last one, the third at the first <em>(n &ndash; 2)</em> items, and so on.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        </pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p>A random number is chosen in the range <em>(0..i)</em>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        <span class="n">n</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        </pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-9">&#182;</a>
+        </div>
+        <p>The <em>i</em>-th item is then swapped with the item at the randomly chosen position.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span> <span class="n">array</span><span class="o">[</span><span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="n">array</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span> <span class="n">array</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+        </pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>The algorithm loops over until the range of the examined items is reduced to the
+first item. </p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">array</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Why_does_it_work?'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Why_does_it_work?">&#182;</a>
+        </div>
+        <h3>Why does it work?</h3>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>Of course, this is a description of the <em>Knuth-Fisher-Yates</em> algorithm. It is quite simple,
+and guarantees an unbiased shuffling if correctly implemented. But how does it guarantee our
+custom constraint, that no items should be at the same place before and after?</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-13">&#182;</a>
+        </div>
+        <p>The answer lies in the way the algorithm operates. As we wrote above, it works by swapping items
+<em>(n &ndash; 1)</em> times. One of the item to be swapped is selected randomly &ndash; but the other is always
+at the end of the examined range. At each iteration, the range is decreased by one.
+That means the algorithm ensures that <strong>all the items of the array will be swapped at least once</strong>:
+at the first iteration the last item will be swapped, then the second-to-last item, and so on.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-14'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-14">&#182;</a>
+        </div>
+        <p>But how does this ensure that an item won&rsquo;t ever be swapped back at its original place? After
+all, the other item to be swapped is chosen randomly.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-15'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-15">&#182;</a>
+        </div>
+        <p>However the random is not over the whole range
+of the array: the range is reduced at each iteration. The positions are only selected among the
+ones that have not been swapped yet.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-16'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-16">&#182;</a>
+        </div>
+        <p>For instance, let&rsquo;s say the last item of the array is &ldquo;Z&rdquo;. Once the first iteration swapped &ldquo;Z&rdquo;
+with another randomly-chosen item, the random range is decreased by one. This means that <strong>no item
+can ever be swapped at the last position anymore</strong>: even if a future random position selects &ldquo;Z&rdquo; to be
+swapped again, it is impossible that it comes back at the last position.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-17'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-17">&#182;</a>
+        </div>
+        <p>By extension, no item can be swapped back at the same place: this ensures all our constraints are
+respected.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Tests'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Tests">&#182;</a>
+        </div>
+        <h2>Tests</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-19'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-19">&#182;</a>
+        </div>
+        <p>The testing plan is the following:</p>
+
+<ul>
+<li><p>Assert conformance of the shuffling function using a naive (and wrong) shuffling
+function; expect it to fail,</p></li>
+<li><p>Assert conformance of the real shuffling function; expect it to succeed.</p></li>
+<li><p>Assert that the sample standard deviation converges to 0 when the samples count increase.</p></li>
+</ul>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Asserting_initial_conditions'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Asserting_initial_conditions">&#182;</a>
+        </div>
+        <h2>Asserting initial conditions</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-21'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-21">&#182;</a>
+        </div>
+        <p>The basis of our conformance tests is a method that, given a grid and the shuffled grid,
+ensure that no item is at the same place before and after the shuffle.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">def</span> <span class="nf">assert_positions_different</span> <span class="n">grid</span><span class="p">,</span> <span class="n">shuffled_grid</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-22'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-22">&#182;</a>
+        </div>
+        <p>For this, we use a simple reduce: for each index, check that the items are different
+in the original and in the shuffled grid.</p>
+
+<p>The result is placed in an accumulator, which will turn to &lsquo;false&rsquo; as soon as a duplicate
+item is detected.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">shuffled_grid</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="kp">true</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">is_different</span><span class="p">,</span> <span class="n">letter</span><span class="o">|</span>
+        <span class="n">is_different</span> <span class="ow">and</span> <span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">find_index</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span> <span class="o">!=</span> <span class="n">shuffled_grid</span><span class="o">.</span><span class="n">find_index</span><span class="p">(</span><span class="n">letter</span><span class="p">))</span>
+    <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-23'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-23">&#182;</a>
+        </div>
+        <p>Now we also need a function that can perform this conformance check on a <em>set</em> of shuffled grids.</p>
+
+<p>This function takes an original grid, and an array of shuffled grid.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">def</span> <span class="nf">print_grid_assertions</span> <span class="n">grid</span><span class="p">,</span> <span class="n">shuffled_grids</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-24'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-24">&#182;</a>
+        </div>
+        <p>For each shuffled grid, it prints its conformance status to the standard output.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">all_grids_valid</span> <span class="o">=</span> <span class="kp">true</span>
+    <span class="n">shuffled_grids</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">shuffled_grid</span><span class="o">|</span> 
+        <span class="k">if</span> <span class="n">assert_positions_different</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">shuffled_grid</span><span class="p">)</span>
+            <span class="nb">puts</span> <span class="s2">&quot;[OK]    &quot;</span> <span class="o">+</span> <span class="n">shuffled_grid</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span><span class="o">.</span><span class="n">to_s</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">}</span><span class="o">.</span><span class="n">to_s</span>
+        <span class="k">else</span>
+            <span class="nb">puts</span> <span class="s2">&quot;[Error] &quot;</span> <span class="o">+</span> <span class="n">shuffled_grid</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">}</span><span class="o">.</span><span class="n">to_s</span>
+            <span class="n">all_grids_valid</span> <span class="o">=</span> <span class="kp">false</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-25'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-25">&#182;</a>
+        </div>
+        <p>At the end, it reports the global conformance of the grids — that is whether the shuffle
+was correct for all of them, or if some had duplicated items.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">if</span> <span class="n">all_grids_valid</span> <span class="o">==</span> <span class="kp">true</span>
+        <span class="nb">puts</span> <span class="s2">&quot;Success: On all shuffle, all items are in a different position &quot;</span> <span class="p">\</span>
+             <span class="s2">&quot;before and after the shuffle.&quot;</span>
+    <span class="k">else</span>
+        <span class="nb">puts</span> <span class="s2">&quot;Failure: On some shuffles, one or more items are in the same position &quot;</span> <span class="p">\</span>
+             <span class="s2">&quot;before and after the shuffle.&quot;</span>     
+    <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-26'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-26">&#182;</a>
+        </div>
+        <p>And finally, we need a function to generate a set of <em>n</em> shuffled grids.
+The shuffling method to use can be specified as an optional parameter &ndash; so we can
+test different algorithms.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">def</span> <span class="nf">shuffled_grids</span> <span class="n">grid_to_shuffle</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">shuffleFunction</span><span class="o">=</span><span class="nb">method</span><span class="p">(</span><span class="ss">:shuffle!</span><span class="p">)</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-27'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-27">&#182;</a>
+        </div>
+        <p>For this, we fill an array with <em>n</em> copies of the grid to be shuffled.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="p">(</span><span class="nb">Array</span><span class="o">.</span><span class="n">new</span> <span class="n">count</span><span class="p">)</span><span class="o">.</span>
+        <span class="n">fill</span><span class="p">(</span><span class="n">grid_to_shuffle</span><span class="p">)</span><span class="o">.</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-28'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-28">&#182;</a>
+        </div>
+        <p>Then the shuffling function is called one for each object of the array.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        <span class="n">collect</span> <span class="p">{</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span> <span class="n">shuffleFunction</span><span class="o">.</span><span class="n">call</span> <span class="n">item</span><span class="o">.</span><span class="n">dup</span> <span class="p">}</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Printing_statistics'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Printing_statistics">&#182;</a>
+        </div>
+        <h2>Printing statistics</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-30'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-30">&#182;</a>
+        </div>
+        <p>This part deals with the distribution uniformity tests.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-31'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-31">&#182;</a>
+        </div>
+        <p>The base of it is a simple function that calculates the <a href="http://en.wikipedia.org/wiki/Standard_deviation">standard deviation</a>
+for a set of samples. The samples are given as an array of probabilities: the first
+sample has a probability of <code>dist[0]</code>, the second sample of dist[1], and so on.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">def</span> <span class="nf">sample_standard_deviation</span> <span class="n">dist</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">count</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-32'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-32">&#182;</a>
+        </div>
+        <p>The mean is the sum of all samples divided by the number of samples.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">mean</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:+</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-33'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-33">&#182;</a>
+        </div>
+        <p>There is the formula for the variance.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">dist</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="p">}</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:+</span><span class="p">)</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-34'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-34">&#182;</a>
+        </div>
+        <p>As the variance is the squared standard deviation, return the square root of the variance.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">s</span> <span class="o">=</span> <span class="no">Math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> 
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-35'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-35">&#182;</a>
+        </div>
+        <p>We also need a function to compute and print the statistics of our samples.
+This one takes an array of shuffled grids.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">def</span> <span class="nf">print_shuffled_randomness</span> <span class="n">grids</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-36'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-36">&#182;</a>
+        </div>
+        <p>(When we dump the content of shuffled arrays to the console, it can be useful
+to give them a nice formatting.)</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">prettyprint</span> <span class="nb">hash</span>
+        <span class="nb">hash</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span><span class="o">|</span>
+             <span class="nb">p</span> <span class="n">key</span><span class="o">.</span><span class="n">map</span><span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="n">x</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">}</span><span class="o">.</span><span class="n">to_s</span> <span class="o">+</span> <span class="s2">&quot; =&gt; &quot;</span> <span class="o">+</span> <span class="n">value</span><span class="o">.</span><span class="n">to_s</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-37'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-37">&#182;</a>
+        </div>
+        <p>First we regroup all the samples by occurence, and we count them.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">occurrences</span> <span class="o">=</span> <span class="n">grids</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)){</span> <span class="o">|</span><span class="nb">hash</span><span class="p">,</span> <span class="n">grid</span><span class="o">|</span> <span class="nb">hash</span><span class="o">[</span><span class="n">grid</span><span class="o">]</span> <span class="o">+=</span><span class="mi">1</span> <span class="p">;</span> <span class="nb">hash</span> <span class="p">}</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-38'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-38">&#182;</a>
+        </div>
+        <p>Then we compute the outcomes &ndash; i.e. the probability of each occurence.   </p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">outcomes</span> <span class="o">=</span> <span class="n">occurrences</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">occurrences</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="nb">hash</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span><span class="o">|</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-39'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-39">&#182;</a>
+        </div>
+        <p>The probability of an sample is the number of occurences of a sample
+divided by the total number of samples.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        <span class="nb">hash</span><span class="o">[</span><span class="n">key</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span> <span class="o">/</span> <span class="n">grids</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">to_f</span><span class="p">)</span>
+        <span class="nb">hash</span>
+    <span class="k">end</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-40'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-40">&#182;</a>
+        </div>
+        <p>The next line can be uncommented to print the outcomes. 
+puts &ldquo;Probability of each occurence: &rdquo;; prettyprint outcomes</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-41'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-41">&#182;</a>
+        </div>
+        <p>Then we compute the sum of the outcomes (which should be equal to 1).</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">outcomes_sum</span> <span class="o">=</span> <span class="n">outcomes</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="mi">0</span><span class="p">){</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span><span class="o">|</span> <span class="n">sum</span> <span class="o">+=</span> <span class="n">value</span><span class="p">}</span>
+    </pre></div>
+      </td>
+    </tr>
+    <tr id='section-42'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-42">&#182;</a>
+        </div>
+        <p>At the end, we print the sample standard deviation to the screen.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">s</span> <span class="o">=</span> <span class="n">sample_standard_deviation</span> <span class="n">outcomes</span><span class="o">.</span><span class="n">values</span>
+    <span class="nb">puts</span> <span class="s2">&quot;Sum of outcomes: </span><span class="si">#{</span><span class="n">outcomes_sum</span><span class="si">}</span><span class="se">\t</span><span class="s2">Sample standard deviation: </span><span class="si">#{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Helpers'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Helpers">&#182;</a>
+        </div>
+        <h2>Helpers</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-44'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-44">&#182;</a>
+        </div>
+        <p>To ensure tests correctness, we need a shuffle method that fails to meet the requirements.
+By using it, we can check that tests fail correctly when they must do so.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">def</span> <span class="nf">naive_shuffle!</span> <span class="n">array</span>
+    <span class="n">shuffled_array</span> <span class="o">=</span> <span class="n">array</span>
+    <span class="n">array</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-45'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-45">&#182;</a>
+        </div>
+        <p>This naive shuffle just swap two random items in the array.</p>
+
+<p>So we&rsquo;re sure that there will be cases where items are at the same position before
+and after. Plus the resulting distribution is probably biased.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>        <span class="n">n</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="n">shuffled_array</span><span class="o">.</span><span class="n">count</span><span class="p">);</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="n">shuffled_array</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+        <span class="n">shuffled_array</span><span class="o">[</span><span class="n">m</span><span class="o">]</span><span class="p">,</span> <span class="n">shuffled_array</span><span class="o">[</span><span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="n">shuffled_array</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span> <span class="n">shuffled_array</span><span class="o">[</span><span class="n">m</span><span class="o">]</span>
+    <span class="k">end</span>
+    <span class="k">return</span> <span class="n">array</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Wrapping_up'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Wrapping_up">&#182;</a>
+        </div>
+        <h2>Wrapping up</h2>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-47'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-47">&#182;</a>
+        </div>
+        <p>Time to run our tests!
+First, create some tests data.
+We represent a grid of applications by an array of application titles.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="n">apps_grid</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;Facebook&quot;</span><span class="p">,</span> <span class="s2">&quot;TestFlight&quot;</span><span class="p">,</span> <span class="s2">&quot;Maps&quot;</span><span class="p">,</span> <span class="s2">&quot;Pages&quot;</span><span class="p">,</span> <span class="s2">&quot;Safari&quot;</span><span class="o">]</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-48'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-48">&#182;</a>
+        </div>
+        <p>Now, test that the shuffle method responds to constraints.
+For this, we shuffle the grid several times, store all the different shufflings, and ensure
+that all these outcomes satify the requirements.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-49'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-49">&#182;</a>
+        </div>
+        <p>A good demonstration can be made using 10 differents shuffles per test.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="n">samples_count</span> <span class="o">=</span> <span class="mi">10</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-50'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-50">&#182;</a>
+        </div>
+        <p>Let&rsquo;s generate a serie of shuffled grids using our bogus <code>naive_shuffle</code> function.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">puts</span> <span class="s2">&quot;Naive shuffle:&quot;</span>
+<span class="n">bad_samples</span> <span class="o">=</span> <span class="n">shuffled_grids</span> <span class="n">apps_grid</span><span class="p">,</span> <span class="n">samples_count</span><span class="p">,</span> <span class="nb">method</span><span class="p">(</span><span class="ss">:naive_shuffle!</span><span class="p">)</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-51'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-51">&#182;</a>
+        </div>
+        <p>Naturally, we expect our tests to fail, with several shufflings exhibiting items at the same place.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="n">print_grid_assertions</span> <span class="n">apps_grid</span><span class="p">,</span> <span class="n">bad_samples</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-52'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-52">&#182;</a>
+        </div>
+        <p>Now let&rsquo;s generate a serie of shuffled grids using our custom shuffle function.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">puts</span> <span class="s2">&quot;&quot;</span>
+<span class="nb">puts</span> <span class="s2">&quot;Good shuffle:&quot;</span>
+<span class="n">shuffled_grids</span> <span class="o">=</span> <span class="n">shuffled_grids</span> <span class="n">apps_grid</span><span class="p">,</span> <span class="n">samples_count</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-53'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-53">&#182;</a>
+        </div>
+        <p>This time, we expect all the tests to be successfull.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="n">print_grid_assertions</span> <span class="n">apps_grid</span><span class="p">,</span> <span class="n">shuffled_grids</span>
+
+<span class="nb">puts</span> <span class="s2">&quot;&quot;</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Testing_for_bias'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Testing_for_bias">&#182;</a>
+        </div>
+        <h3>Testing for bias</h3>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+    <tr id='section-55'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-55">&#182;</a>
+        </div>
+        <p>One last thing: we&rsquo;d like to test that the suffled distribution is not biased. That is,
+is there the same probability to get each outcome?</p>
+
+<p>For this, we compute the sample standard deviation of a serie of shuffled grids. The
+actual value of the standard deviation doesn&rsquo;t have much meaning — but if the distribution
+is unbiased, when we increase the number of samples, we should see it converge to zero.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="nb">puts</span> <span class="s2">&quot;For 100 samples&quot;</span>
+<span class="n">shuffled_samples</span> <span class="o">=</span> <span class="n">shuffled_grids</span> <span class="n">apps_grid</span><span class="p">,</span> <span class="mi">100</span>
+<span class="n">print_shuffled_randomness</span> <span class="n">shuffled_samples</span>
+
+<span class="nb">puts</span> <span class="s2">&quot;For 1000 samples&quot;</span>
+<span class="n">shuffled_samples</span> <span class="o">=</span> <span class="n">shuffled_grids</span> <span class="n">apps_grid</span><span class="p">,</span> <span class="mi">1000</span>
+<span class="n">print_shuffled_randomness</span> <span class="n">shuffled_samples</span>
+
+<span class="nb">puts</span> <span class="s2">&quot;For 10000 samples&quot;</span>
+<span class="n">shuffled_samples</span> <span class="o">=</span> <span class="n">shuffled_grids</span> <span class="n">apps_grid</span><span class="p">,</span> <span class="mi">10000</span>
+<span class="n">print_shuffled_randomness</span> <span class="n">shuffled_samples</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

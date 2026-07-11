@@ -1,0 +1,14 @@
+#!/usr/bin/ruby
+
+def shuffle! array
+    (array.count - 1).downto(0) do |i|
+        n = rand(i)
+        array[i], array[n] = array[n], array[i]
+    end
+    return array
+end
+
+if __FILE__ == $0
+    grid = ARGF.readline.strip.split(',')
+    p shuffle!(grid).join(',')
+end
