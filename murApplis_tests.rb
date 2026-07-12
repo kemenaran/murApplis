@@ -1,6 +1,6 @@
 # This script tests the behavior of the shuffling function used by `murApplis`.
 #
-# It is also a first attempt at litterate-style programming: this page is generated from
+# It is also a first attempt at literate-style programming: this page is generated from
 # the `murApplis_tests.rb` file using [Rocco](https://github.com/rtomayko/rocco). You can
 # also view [murApplis_tests.rb](./murApplis_tests.rb) directly.
 
